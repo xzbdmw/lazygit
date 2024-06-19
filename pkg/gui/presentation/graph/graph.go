@@ -30,7 +30,7 @@ type Pipe struct {
 	style    style.TextStyle
 }
 
-var highlightStyle = style.FgLightWhite.SetBold()
+var highlightStyle = style.FgBlue.SetBold()
 
 func ContainsCommitHash(pipes []*Pipe, hash string) bool {
 	for _, pipe := range pipes {
