@@ -371,6 +371,7 @@ type KeybindingUniversalConfig struct {
 	Remove                       string   `yaml:"remove"`
 	New                          string   `yaml:"new"`
 	Edit                         string   `yaml:"edit"`
+	Editee                       string   `yaml:"editee"`
 	OpenFile                     string   `yaml:"openFile"`
 	ScrollUpMain                 string   `yaml:"scrollUpMain"`
 	ScrollDownMain               string   `yaml:"scrollDownMain"`
@@ -517,6 +518,10 @@ type OSConfig struct {
 	// Command for editing a file at a given line number. Should contain
 	// "{{filename}}", and may optionally contain "{{line}}".
 	EditAtLine string `yaml:"editAtLine,omitempty"`
+
+	// Command for editing a file at a given line number. Should contain
+	// "{{filename}}", and may optionally contain "{{line}}".
+	Hide string `yaml:"hide,omitempty"`
 
 	// Same as EditAtLine, except that the command needs to wait until the
 	// window is closed.
