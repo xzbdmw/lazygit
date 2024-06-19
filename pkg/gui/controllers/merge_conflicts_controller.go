@@ -78,6 +78,13 @@ func (self *MergeConflictsController) GetKeybindings(opts types.KeybindingsOpts)
 			DisplayOnScreen: true,
 		},
 		{
+			Key:             opts.GetKey(opts.Config.Universal.Editee1),
+			Handler:         self.HandleEditFile,
+			Description:     self.c.Tr.EditFile,
+			Tooltip:         self.c.Tr.EditFileTooltip,
+			DisplayOnScreen: true,
+		},
+		{
 			Key:         opts.GetKey(opts.Config.Universal.OpenFile),
 			Handler:     self.HandleOpenFile,
 			Description: self.c.Tr.OpenFile,
