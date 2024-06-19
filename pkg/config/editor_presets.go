@@ -39,8 +39,14 @@ func GetOpenDirInEditorTemplate(osConfig *OSConfig, guessDefaultEditor func() st
 	return template, getEditInTerminal(osConfig, preset)
 }
 
+func GetHideTemplate(osConfig *OSConfig) string {
+	template := osConfig.Hide
+	return template
+}
+
 type editPreset struct {
 	editTemplate              string
+	hideTemplate              string
 	editAtLineTemplate        string
 	editAtLineAndWaitTemplate string
 	openDirInEditorTemplate   string

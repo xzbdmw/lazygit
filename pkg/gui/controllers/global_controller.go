@@ -105,7 +105,7 @@ func (self *GlobalController) GetKeybindings(opts types.KeybindingsOpts) []*type
 		{
 			Key:      opts.GetKey(opts.Config.Universal.QuitAlt1),
 			Modifier: gocui.ModNone,
-			Handler:  self.quit,
+			Handler:  self.quitAndHide,
 		},
 		{
 			Key:      opts.GetKey(opts.Config.Universal.QuitWithoutChangingDirectory),
@@ -166,6 +166,14 @@ func (self *GlobalController) createDiffingMenu() error {
 
 func (self *GlobalController) quit() error {
 	return (&QuitActions{c: self.c}).Quit()
+}
+
+func (self *GlobalController) quitAndHide() error {
+	return (&QuitActions{c: self.c}).QuitAndHide()
+}
+
+func (self *GlobalController) hide() error {
+	return (&QuitActions{c: self.c}).Hide()
 }
 
 func (self *GlobalController) quitWithoutChangingDirectory() error {
