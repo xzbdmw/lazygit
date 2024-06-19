@@ -71,7 +71,7 @@ func (self *MergeConflictsController) GetKeybindings(opts types.KeybindingsOpts)
 			DisplayOnScreen: true,
 		},
 		{
-			Key:             opts.GetKey(opts.Config.Universal.Edit),
+			Key:             opts.GetKey(opts.Config.Universal.Editee),
 			Handler:         self.HandleEditFile,
 			Description:     self.c.Tr.EditFile,
 			Tooltip:         self.c.Tr.EditFileTooltip,
