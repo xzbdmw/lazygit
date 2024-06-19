@@ -135,6 +135,12 @@ func (self *BranchesController) GetKeybindings(opts types.KeybindingsOpts) []*ty
 			Description: self.c.Tr.SortOrder,
 		},
 		{
+			Key:         opts.GetKey(opts.Config.Branches.FetchRemote),
+			Handler:     self.fetch,
+			Description: self.c.Tr.Fetch,
+			Tooltip:     self.c.Tr.FetchTooltip,
+		},
+		{
 			Key:               opts.GetKey(opts.Config.Commits.ViewResetOptions),
 			Handler:           self.withItem(self.createResetMenu),
 			GetDisabledReason: self.require(self.singleItemSelected()),
@@ -183,6 +189,28 @@ func (self *BranchesController) GetOnRenderToMain() func() error {
 			})
 		})
 	}
+}
+
+func (self *BranchesController) fetch() error {
+	return self.c.WithWaitingStatus(self.c.Tr.FetchingStatus, func(task gocui.Task) error {
+		if err := self.fetchAux(task); err != nil {
+			return err
+		}
+		return self.c.Refresh(types.RefreshOptions{Mode: types.ASYNC})
+	})
+}
+
+func (self *BranchesController) fetchAux(task gocui.Task) (err error) {
+	self.c.LogAction("Fetch")
+	err = self.c.Git().Sync.Fetch(task)
+
+	if err != nil && strings.Contains(err.Error(), "exit status 128") {
+		return errors.New(self.c.Tr.PassUnameWrong)
+	}
+
+	_ = self.c.Refresh(types.RefreshOptions{Scope: []types.RefreshableView{types.BRANCHES, types.COMMITS, types.REMOTES, types.TAGS}, Mode: types.ASYNC})
+
+	return err
 }
 
 func (self *BranchesController) viewUpstreamOptions(selectedBranch *models.Branch) error {
