@@ -66,6 +66,12 @@ func (self *StagingController) GetKeybindings(opts types.KeybindingsOpts) []*typ
 			Tooltip:     self.c.Tr.EditFileTooltip,
 		},
 		{
+			Key:         opts.GetKey(opts.Config.Universal.Editee1),
+			Handler:     self.EditFile,
+			Description: self.c.Tr.EditFile,
+			Tooltip:     self.c.Tr.EditFileTooltip,
+		},
+		{
 			Key:         opts.GetKey(opts.Config.Universal.Return),
 			Handler:     self.Escape,
 			Description: self.c.Tr.ReturnToFilesPanel,

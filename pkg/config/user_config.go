@@ -370,6 +370,7 @@ type KeybindingUniversalConfig struct {
 	New                          string   `yaml:"new"`
 	Edit                         string   `yaml:"edit"`
 	Editee                       string   `yaml:"editee"`
+	Editee1                      string   `yaml:"editee1"`
 	OpenFile                     string   `yaml:"openFile"`
 	ScrollUpMain                 string   `yaml:"scrollUpMain"`
 	ScrollDownMain               string   `yaml:"scrollDownMain"`
