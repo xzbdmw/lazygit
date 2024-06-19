@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"github.com/jesseduffield/gocui"
+	"github.com/jesseduffield/lazygit/pkg/config"
 	"github.com/jesseduffield/lazygit/pkg/gui/context"
 	"github.com/jesseduffield/lazygit/pkg/gui/types"
 )
@@ -15,9 +16,41 @@ func (self *QuitActions) Quit() error {
 	return self.quitAux()
 }
 
+func (self *QuitActions) QuitAndHide() error {
+	self.c.State().SetRetainOriginalDir(false)
+	return self.quitAuxHide()
+}
+
+func (self *QuitActions) Hide() error {
+	cmdStr := config.GetHideTemplate(&self.c.UserConfig.OS)
+	err := self.c.OS().Cmd.NewShell(cmdStr).Run()
+	if err != nil {
+		return self.Quit()
+	}
+	return nil
+}
+
 func (self *QuitActions) QuitWithoutChangingDirectory() error {
 	self.c.State().SetRetainOriginalDir(true)
 	return self.quitAux()
+}
+
+func (self *QuitActions) quitAuxHide() error {
+	if self.c.State().GetUpdating() {
+		return self.confirmQuitDuringUpdate()
+	}
+
+	if self.c.UserConfig.ConfirmOnQuit {
+		return self.c.Confirm(types.ConfirmOpts{
+			Title:  "",
+			Prompt: self.c.Tr.ConfirmQuit,
+			HandleConfirm: func() error {
+				return gocui.ErrQuit
+			},
+		})
+	}
+
+	return self.Hide()
 }
 
 func (self *QuitActions) quitAux() error {
@@ -89,7 +122,7 @@ func (self *QuitActions) Escape() error {
 	}
 
 	if self.c.UserConfig.QuitOnTopLevelReturn {
-		return self.Quit()
+		return self.Hide()
 	}
 
 	return nil
