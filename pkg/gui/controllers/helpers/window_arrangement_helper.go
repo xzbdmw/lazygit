@@ -122,6 +122,9 @@ func shouldUsePortraitMode(args WindowArrangementArgs) bool {
 
 func GetWindowDimensions(args WindowArrangementArgs) map[string]boxlayout.Dimensions {
 	sideSectionWeight, mainSectionWeight := getMidSectionWeights(args)
+	if shouldUsePortraitMode(args) {
+		sideSectionWeight, mainSectionWeight = 3, 4
+	}
 
 	sidePanelsDirection := boxlayout.COLUMN
 	if shouldUsePortraitMode(args) {
