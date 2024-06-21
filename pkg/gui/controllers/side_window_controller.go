@@ -41,7 +41,7 @@ func (self *SideWindowController) GetKeybindings(opts types.KeybindingsOpts) []*
 		{Key: opts.GetKey(opts.Config.Universal.PrevBlockAlt), Modifier: gocui.ModNone, Handler: self.previousSideWindow},
 		{Key: opts.GetKey(opts.Config.Universal.NextBlockAlt), Modifier: gocui.ModNone, Handler: self.nextSideWindow},
 		{Key: opts.GetKey(opts.Config.Universal.PrevBlockAlt2), Modifier: gocui.ModNone, Handler: self.previousSideWindow},
-		{Key: opts.GetKey(opts.Config.Universal.NextBlockAlt2), Modifier: gocui.ModNone, Handler: self.nextSideWindow},
+		{Key: opts.GetKey(opts.Config.Universal.NextBlockAlt2), Modifier: gocui.ModNone, Handler: self.nextSideWindowTab},
 	}
 }
 
@@ -59,6 +59,32 @@ func (self *SideWindowController) previousSideWindow() error {
 		for i := range windows {
 			if currentWindow == windows[i] {
 				newWindow = windows[i-1]
+				break
+			}
+			if i == len(windows)-1 {
+				return nil
+			}
+		}
+	}
+
+	context := self.c.Helpers().Window.GetContextForWindow(newWindow)
+
+	return self.c.PushContext(context)
+}
+
+func (self *SideWindowController) nextSideWindowTab() error {
+	windows := self.c.Helpers().Window.SideWindows()
+	currentWindow := self.c.Helpers().Window.CurrentWindow()
+	if currentWindow == "commits" {
+		return self.previousSideWindow()
+	}
+	var newWindow string
+	if currentWindow == "" || currentWindow == windows[len(windows)-1] {
+		newWindow = windows[0]
+	} else {
+		for i := range windows {
+			if currentWindow == windows[i] {
+				newWindow = windows[i+1]
 				break
 			}
 			if i == len(windows)-1 {
