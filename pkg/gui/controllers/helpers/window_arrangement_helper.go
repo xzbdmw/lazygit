@@ -169,6 +169,31 @@ func GetWindowDimensions(args WindowArrangementArgs) map[string]boxlayout.Dimens
 	}
 
 	layerOneWindows := boxlayout.ArrangeWindows(root, 0, 0, args.Width, args.Height)
+
+	lf, ok1 := layerOneWindows["files"]
+	lc, ok2 := layerOneWindows["commits"]
+	lb, ok3 := layerOneWindows["branches"]
+
+	if ok1 && ok2 && ok3 {
+		hit := (lf.Y1 - lf.Y0) == (lc.Y1 - lc.Y0)
+		hit = hit || (lf.Y1-lf.Y0) == (lb.Y1-lb.Y0)
+
+		if hit {
+			start := lb.Y0 + 3
+			mid := start + (lc.Y1-start)/2
+
+			lb.Y1 = start
+			layerOneWindows["branches"] = lb
+
+			lf.Y0 = start + 1
+			lf.Y1 = mid
+			layerOneWindows["files"] = lf
+
+			lc.Y0 = mid + 1
+			layerOneWindows["commits"] = lc
+		}
+	}
+
 	limitWindows := boxlayout.ArrangeWindows(&boxlayout.Box{Window: "limit"}, 0, 0, args.Width, args.Height)
 
 	return MergeMaps(layerOneWindows, limitWindows)
@@ -444,8 +469,8 @@ func sidePanelChildren(args WindowArrangementArgs) func(width int, height int) [
 
 			return []*boxlayout.Box{
 				fullHeightBox("status"),
-				fullHeightBox("files"),
 				fullHeightBox("branches"),
+				fullHeightBox("files"),
 				fullHeightBox("commits"),
 				fullHeightBox("stash"),
 			}
@@ -467,8 +492,8 @@ func sidePanelChildren(args WindowArrangementArgs) func(width int, height int) [
 					Window: "status",
 					Size:   3,
 				},
-				accordionBox(&boxlayout.Box{Window: "files", Weight: 1}),
 				accordionBox(&boxlayout.Box{Window: "branches", Weight: 1}),
+				accordionBox(&boxlayout.Box{Window: "files", Weight: 1}),
 				accordionBox(&boxlayout.Box{Window: "commits", Weight: 1}),
 				accordionBox(getDefaultStashWindowBox(args)),
 			}
