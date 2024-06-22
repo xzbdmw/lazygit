@@ -113,6 +113,13 @@ func (self *GlobalController) GetKeybindings(opts types.KeybindingsOpts) []*type
 			Handler:  self.quitWithoutChangingDirectory,
 		},
 		{
+			Key:             opts.GetKey(opts.Config.Universal.ReturnAlt1),
+			Modifier:        gocui.ModNone,
+			Handler:         self.escape,
+			Description:     self.c.Tr.Cancel,
+			DisplayOnScreen: true,
+		},
+		{
 			Key:             opts.GetKey(opts.Config.Universal.Return),
 			Modifier:        gocui.ModNone,
 			Handler:         self.escape,
