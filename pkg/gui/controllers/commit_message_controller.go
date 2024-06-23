@@ -38,6 +38,11 @@ func (self *CommitMessageController) GetKeybindings(opts types.KeybindingsOpts) 
 			Description: self.c.Tr.Close,
 		},
 		{
+			Key:         opts.GetKey(opts.Config.Universal.ReturnAlt1),
+			Handler:     self.close,
+			Description: self.c.Tr.Close,
+		},
+		{
 			Key:     opts.GetKey(opts.Config.Universal.PrevItem),
 			Handler: self.handlePreviousCommit,
 		},
