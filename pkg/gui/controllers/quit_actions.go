@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"os"
+
 	"github.com/jesseduffield/gocui"
 	"github.com/jesseduffield/lazygit/pkg/config"
 	"github.com/jesseduffield/lazygit/pkg/gui/context"
@@ -23,11 +25,12 @@ func (self *QuitActions) QuitAndHide() error {
 
 func (self *QuitActions) Hide() error {
 	cmdStr := config.GetHideTemplate(&self.c.UserConfig.OS)
-	err := self.c.OS().Cmd.NewShell(cmdStr).Run()
-	if err != nil {
+	envVar := os.Getenv("NVIM")
+	if envVar == "" {
 		return self.Quit()
+	} else {
+		return self.c.OS().Cmd.NewShell(cmdStr).Run()
 	}
-	return nil
 }
 
 func (self *QuitActions) QuitWithoutChangingDirectory() error {
